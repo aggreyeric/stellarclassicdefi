@@ -2,8 +2,8 @@
 
 
 import React, { useState } from 'react';
-import { Keypair, Asset, TransactionBuilder, Operation, Networks, LiquidityPoolAsset, LiquidityPoolId, BASE_FEE } from '@stellar/stellar-sdk';
-import { SorobanRpc, Horizon } from '@stellar/stellar-sdk';
+import { Keypair, Asset, TransactionBuilder, Operation, Networks, LiquidityPoolAsset, BASE_FEE, getLiquidityPoolId } from '@stellar/stellar-sdk';
+import {  Horizon } from '@stellar/stellar-sdk';
 
 const server = new Horizon.Server('https://horizon-testnet.stellar.org')
 
@@ -59,18 +59,27 @@ const StellarOperations = () => {
     try {
       const account = await server.loadAccount(keypair.publicKey());
       const customAsset = new Asset(assetName, keypair.publicKey());
-      const liquidityPoolAsset =  new LiquidityPoolAsset(Asset.native(), customAsset, 30);
-      const lpid = new LiquidityPoolId("constant-product", liquidityPoolAsset);
+      const lp =  new LiquidityPoolAsset(Asset.native(), customAsset, 30);
+     console.log(lp);
+     console.log(account);
+     console.log(customAsset);
+
+
+      const lpid = new getLiquidityPoolId("constant_product", lp);
+
+      console.log(lpid);
+
+
 
       const transaction = new TransactionBuilder(account, {
         fee: BASE_FEE,
         networkPassphrase: Networks.TESTNET
       })
-        .addOperation(Operation.changeTrust({ line: liquidityPoolAsset }))
+        .addOperation(Operation.changeTrust({ line: lp }))
         .addOperation(Operation.liquidityPoolDeposit({
           liquidityPoolId: lpid,
-          maxAmountA: depositAmount,
-          maxAmountB: depositAmount,
+          maxAmountA: 1000,
+          maxAmountB: 1000,
           minPrice: { n: 1, d: 1 },
           maxPrice: { n: 1, d: 1 }
         }))
