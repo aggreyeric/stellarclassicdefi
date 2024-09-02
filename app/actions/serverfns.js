@@ -64,33 +64,33 @@ const transaction = new TransactionBuilder(account, {
         }
     })).setTimeout(180).build();
 
-    
-    transaction.sign(pair);
+
+transaction.sign(pair);
 
 
-    try {
-        const response = await server.sendTransaction(transaction);
-        console.log("Transaction hash:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);
-        console.log("Success! View your transaction at:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);``
-    } catch (error) {
-        console.log(`${error}   More details: ${JSON.stringify(error.response.data.extras, null, 2)}`);
-    }
-
-
-
+try {
+    const response = await server.sendTransaction(transaction);
+    console.log("Transaction hash:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);
+    console.log("Success! View your transaction at:", "https://stellar.expert/explorer/testnet/tx/" + response.hash); ``
+} catch (error) {
+    console.log(`${error}   More details: ${JSON.stringify(error.response.data.extras, null, 2)}`);
+}
 
 
 
-    
-    const traderKeypair = Keypair.random();
-    
-    await fundUsingFriendbot(traderKeypair.publicKey())
 
 
-    const traderAccount = await server.getAccount(traderKeypair.publicKey());
 
-    const transaction2 = new TransactionBuilder(traderAccount, {  fee: BASE_FEE, networkPassphrase: Networks.TESTNET  }).
-    addOperation(Operation.changeTrust({asset: Sabiasset, source: traderKeypair.publicKey()}))
+
+const traderKeypair = Keypair.random();
+
+await fundUsingFriendbot(traderKeypair.publicKey())
+
+
+const traderAccount = await server.getAccount(traderKeypair.publicKey());
+
+const transaction2 = new TransactionBuilder(traderAccount, { fee: BASE_FEE, networkPassphrase: Networks.TESTNET }).
+    addOperation(Operation.changeTrust({ asset: Sabiasset, source: traderKeypair.publicKey() }))
     .addOperation(Operation.pathPaymentStrictReceive({
         sendAsset: Asset.native(),
         sendMax: "1000",
@@ -98,23 +98,23 @@ const transaction = new TransactionBuilder(account, {
         destAsset: sabiasset,
         destAmount: "200",
         source: traderKeypair.publicKey()
-        
+
     })).setTimeout(40).build();
 
-    transaction2.sign(traderKeypair);
+transaction2.sign(traderKeypair);
 
-    try {
-        const response = await server.sendTransaction(transaction2);
-        console.log("Transaction2 hash:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);
-        console.log("Success! View your transaction at:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);``
-    } catch (error) {
-        console.log(`${error}   More details: ${JSON.stringify(error.response.data.extras, null, 2)}`);
-    }
+try {
+    const response = await server.sendTransaction(transaction2);
+    console.log("Transaction2 hash:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);
+    console.log("Success! View your transaction at:", "https://stellar.expert/explorer/testnet/tx/" + response.hash); ``
+} catch (error) {
+    console.log(`${error}   More details: ${JSON.stringify(error.response.data.extras, null, 2)}`);
+}
 
 
 
-    const Withdrawallpool = new TransactionBuilder(traderAccount, {  fee: BASE_FEE, networkPassphrase: Networks.TESTNET  }).
-    addOperation(Operation.changeTrust({asset: sabiasset, source: traderKeypair.publicKey()}))
+const Withdrawallpool = new TransactionBuilder(traderAccount, { fee: BASE_FEE, networkPassphrase: Networks.TESTNET }).
+    addOperation(Operation.changeTrust({ asset: sabiasset, source: traderKeypair.publicKey() }))
     .addOperation(Operation.liquidityPoolWithdraw({
         liquidityPoolId: lpid,
         amount: "100",
@@ -122,12 +122,14 @@ const transaction = new TransactionBuilder(account, {
         minAmountB: "0",
     })).setTimeout(40).build();
 
-    Withdrawallpool.sign(traderKeypair);
+Withdrawallpool.sign(traderKeypair);
 
-    try {
-        const response = await server.sendTransaction(Withdrawallpool);
-        console.log("Transaction3 hash:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);
-        console.log("Success! View your transaction at:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);``
-    } catch (error) {
-        console.log(`${error}   More details: ${JSON.stringify(error.response.data.extras, null, 2)}`);
-    }
+try {
+    const response = await server.sendTransaction(Withdrawallpool);
+    console.log("Transaction3 hash:", "https://stellar.expert/explorer/testnet/tx/" + response.hash);
+    console.log("Success! View your transaction at:", "https://stellar.expert/explorer/testnet/tx/" + response.hash); ``
+} catch (error) {
+    console.log(`${error}   More details: ${JSON.stringify(error.response.data.extras, null, 2)}`);
+}
+
+
